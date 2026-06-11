@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chiron — Agent Transaction Audit</title>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6/dist/ethers.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0a0a0f; color: #e0e0e0; }
+    .container { max-width: 1000px; margin: 0 auto; padding: 24px; }
+    h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: 4px; }
+    h1 span { color: #6366f1; }
+    .subtitle { color: #888; font-size: 0.875rem; margin-bottom: 24px; }
+    .card { background: #14141f; border: 1px solid #2a2a3a; border-radius: 8px; padding: 20px; margin-bottom: 16px; }
+    .input-group { display: flex; gap: 8px; margin-bottom: 12px; }
+    .input-group input { flex: 1; background: #1a1a2a; border: 1px solid #333; border-radius: 6px; padding: 10px 14px; color: #e0e0e0; font-size: 0.875rem; }
+    .input-group input:focus { outline: none; border-color: #6366f1; }
+    button { background: #6366f1; color: white; border: none; border-radius: 6px; padding: 10px 20px; font-size: 0.875rem; cursor: pointer; transition: background 0.2s; white-space: nowrap; }
+    button:hover { background: #4f46e5; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+    .stat { text-align: center; padding: 12px; background: #1a1a2a; border-radius: 8px; }
+    .stat .value { font-size: 1.25rem; font-weight: 600; color: #6366f1; }
+    .stat .label { font-size: 0.75rem; color: #888; margin-top: 4px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; }
+    th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #2a2a3a; }
+    th { color: #888; font-weight: 500; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 500; }
+    .badge-pass { background: rgba(34, 197, 94, 0.15); color: #22c55e; }
+    .badge-fail { background: rgba(239, 68, 68, 0.15); color: #ef4444; }
+    .badge-pending { background: rgba(234, 179, 8, 0.15); color: #eab308; }
+    .error { color: #ef4444; font-size: 0.8125rem; padding: 8px; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1><span>Chiron</span> Agent Audit</h1>
+  <div class="subtitle">View verification records for any Chiron-protected agent</div>
+
+  <div class="card">
+    <div class="input-group">
+      <input id="agentInput" type="text" placeholder="Agent contract address (0x...)" value="0x1234...5678">
+      <button id="connectBtn">Connect Wallet</button>
+      <button id="queryBtn">Query</button>
+    </div>
+    <div id="status"></div>
+  </div>
+
+  <div id="statsPanel" class="stats" style="display:none">
+    <div class="stat"><div class="value" id="totalTx">0</div><div class="label">Total Tx</div></div>
+    <div class="stat"><div class="value" id="passedTx">0</div><div class="label">Passed</div></div>
+    <div class="stat"><div class="value" id="failedTx">0</div><div class="label">Failed</div></div>
+  </div>
+
+  <div id="tableCard" class="card" style="display:none">
+    <table>
+      <thead><tr><th>Tx Hash</th><th>Intent Hash</th><th>Result</th><th>Block</th></tr></thead>
+      <tbody id="receiptsBody"></tbody>
+    </table>
+  </div>
+</div>
+<script>
+  let signer = null;
+  const connectBtn = document.getElementById('connectBtn');
+  const queryBtn = document.getElementById('queryBtn');
+  
+  connectBtn.onclick = async () => {
+    if (!window.ethereum) return showStatus('Please install MetaMask');
+    try {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      signer = await provider.getSigner();
+      connectBtn.textContent = `Connected: ${signer.address.slice(0,6)}...${signer.address.slice(-4)}`;
+      showStatus('Wallet connected', 'success');
+    } catch(e) { showStatus('Connection failed: ' + e.message, 'error'); }
+  };
+
+  queryBtn.onclick = async () => {
+    const agent = document.getElementById('agentInput').value.trim();
+    if (!agent || agent.length < 10) return showStatus('Invalid address', 'error');
+    showStatus('Querying chain...');
+    document.getElementById('statsPanel').style.display = 'none';
+    document.getElementById('tableCard').style.display = 'none';
+    showStatus('Query feature requires on-chain indexer (Phase 3+)');
+  };
+
+  function showStatus(msg, type = '') {
+    const el = document.getElementById('status');
+    el.textContent = msg;
+    el.className = type;
+  }
+</script>
+</body>
+</html>
