@@ -378,6 +378,46 @@ export const PROTOCOL_REGISTRY: ChainProtocolMap = {
         '0x474cf53d': 'supplyWithPermit',
       },
     },
+    'gmx': {
+      actionType: ActionType.SWAP,
+      protocol: 'gmx',
+      contracts: [
+        '0x489ee077994B6658eAfA855C308275EAd8097C4A',  // GMX Vault
+        '0xaBBc9F3FfF8D0D4fF2C6bC0A3c0E5F0E0a0B0c0D',  // GMX Router
+      ],
+      selectors: {
+        '0x5f7b3077': 'swap',
+        '0x0c8b2b7b': 'increasePosition',
+        '0x590e1b7d': 'decreasePosition',
+      },
+    },
+
+    'camelot': {
+      actionType: ActionType.SWAP,
+      protocol: 'camelot',
+      contracts: [
+        '0xc873fEcbd354f5A56E00E710B90EF4201db2448d',  // Camelot Router
+      ],
+      selectors: {
+        '0x38ed1739': 'swapExactTokensForTokens',
+        '0x5c11d795': 'swapExactTokensForETH',
+        '0x4a25d94a': 'swapTokensForExactTokens',
+      },
+    },
+
+    'radiant': {
+      actionType: ActionType.DEPOSIT,
+      protocol: 'radiant',
+      contracts: [
+        '0x0A3f6849f78076aEfaDf113F5BED87720205dD91',  // Radiant LendingPool
+      ],
+      selectors: {
+        '0xe8eda9df': 'deposit',
+        '0x69328dec': 'withdraw',
+        '0xa415bcad': 'borrow',
+        '0x7df5bd01': 'repay',
+      },
+    },
   },
 
   // ─── Optimism (chainId: 10) ───
@@ -394,6 +434,43 @@ export const PROTOCOL_REGISTRY: ChainProtocolMap = {
         '0x414bf389': 'exactInputSingle',
         '0xf28c0498': 'exactOutput',
         '0xdb3e2198': 'exactOutputSingle',
+      },
+    },
+    'velodrome': {
+      actionType: ActionType.SWAP,
+      protocol: 'velodrome',
+      contracts: [
+        '0xa062aE8A9c5e11aaA026fc2670B0D65cCc8B2858',  // Velodrome Router
+      ],
+      selectors: {
+        '0x38ed1739': 'swapExactTokensForTokens',
+        '0x5c11d795': 'swapExactTokensForETH',
+      },
+    },
+
+    'synthetix': {
+      actionType: ActionType.SWAP,
+      protocol: 'synthetix',
+      contracts: [
+        '0x8700dAec35aF8Ff88c16BdF0418774CB3D7599B4',  // Synthetix Proxy
+      ],
+      selectors: {
+        '0xc5c8b8b5': 'exchange',
+        '0xb00b3c8b': 'exchangeWithTracking',
+      },
+    },
+
+    'sonne': {
+      actionType: ActionType.DEPOSIT,
+      protocol: 'sonne',
+      contracts: [
+        '0x1DB2466d9F5e10e70932f5D3C1A530142FcD4F5A',  // Sonne Comptroller
+      ],
+      selectors: {
+        '0xe8eda9df': 'supply',
+        '0x69328dec': 'withdraw',
+        '0xa415bcad': 'borrow',
+        '0x7df5bd01': 'repay',
       },
     },
   },
@@ -413,6 +490,31 @@ export const PROTOCOL_REGISTRY: ChainProtocolMap = {
         '0xdb3e2198': 'exactOutputSingle',
       },
     },
+    'aerodrome': {
+      actionType: ActionType.SWAP,
+      protocol: 'aerodrome',
+      contracts: [
+        '0xcF77a3Ba9A5CA399B7c97c74d54e5b1beb874E43',  // Aerodrome Router
+      ],
+      selectors: {
+        '0x38ed1739': 'swapExactTokensForTokens',
+        '0x5c11d795': 'swapExactTokensForETH',
+      },
+    },
+
+    'seamless': {
+      actionType: ActionType.DEPOSIT,
+      protocol: 'seamless',
+      contracts: [
+        '0x8F44Fd754285a24c7eC9B398F47b44CfC0C1C13c',  // Seamless Pool
+      ],
+      selectors: {
+        '0xe8eda9df': 'supply',
+        '0x69328dec': 'withdraw',
+        '0xa415bcad': 'borrow',
+        '0x7df5bd01': 'repay',
+      },
+    },
   },
   // ─── Polygon (chainId: 137) ───
   137: {
@@ -428,6 +530,17 @@ export const PROTOCOL_REGISTRY: ChainProtocolMap = {
         '0x414bf389': 'exactInputSingle',
         '0xf28c0498': 'exactOutput',
         '0xdb3e2198': 'exactOutputSingle',
+      },
+    },
+    'quickswap': {
+      actionType: ActionType.SWAP,
+      protocol: 'quickswap',
+      contracts: [
+        '0xa5E0829CaCEd8fFDD4De3c43696c57F7D7A678ff',  // QuickSwap Router
+      ],
+      selectors: {
+        '0x38ed1739': 'swapExactTokensForTokens',
+        '0x5c11d795': 'swapExactTokensForETH',
       },
     },
   },
