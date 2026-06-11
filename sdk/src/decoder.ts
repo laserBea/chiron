@@ -97,20 +97,21 @@ export class TxDecoder {
   /** Get parameter types for known function signatures */
   private getParamTypes(fnName: string): string[] | null {
     const signatures: Record<string, string[]> = {
-      exactInput: [          ['bytes', 'address', 'uint256']],
-      exactInputSingle: [    ['address', 'address', 'uint24', 'address', 'uint256', 'uint256', 'uint256']],
-      exactOutput: [         ['bytes', 'address', 'uint256']],
-      exactOutputSingle: [   ['address', 'address', 'uint24', 'address', 'uint256', 'uint256', 'uint256']],
-      swapExactTokensForTokens: [['uint256', 'uint256', 'address[]', 'address', 'uint256']],
-      swapExactETHForTokens: [   ['uint256', 'address[]', 'address', 'uint256']],
-      deposit: [             ['address', 'uint256', 'address', 'uint16']],
-      supply: [              ['address', 'uint256', 'address', 'uint16']],
-      withdraw: [            ['address', 'uint256', 'address']],
-      swap: [                ['tuple(address,address,address,uint256,uint256,uint256)', 'uint256']],
-      submit: [              ['address']],
+      exactInput:              ['bytes', 'address', 'uint256'],
+      exactInputSingle:        ['address', 'address', 'uint24', 'address', 'uint256', 'uint256', 'uint256'],
+      exactOutput:             ['bytes', 'address', 'uint256'],
+      exactOutputSingle:       ['address', 'address', 'uint24', 'address', 'uint256', 'uint256', 'uint256'],
+      swapExactTokensForTokens: ['uint256', 'uint256', 'address[]', 'address', 'uint256'],
+      swapExactETHForTokens:    ['uint256', 'address[]', 'address', 'uint256'],
+      deposit:                 ['address', 'uint256', 'address', 'uint16'],
+      supply:                  ['address', 'uint256', 'address', 'uint16'],
+      withdraw:                ['address', 'uint256', 'address'],
+      swap:                    ['tuple(address,address,address,uint256,uint256,uint256)', 'uint256'],
+      submit:                  ['address'],
     };
-    return (signatures[fnName] || [null])[0] || null;
+    return signatures[fnName] || null;
   }
+
 
   /** Serialize decoded values to human-readable strings */
   private serializeValue(val: unknown): unknown {

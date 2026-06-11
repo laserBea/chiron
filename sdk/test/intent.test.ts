@@ -49,7 +49,7 @@ describe('IntentParser', () => {
     });
     expect(intent.actionType).toBe(ActionType.SWAP);
     expect(intent.protocolHash).toBeTruthy();
-    expect(intent.amount).toBe('100');
+    expect(intent.amount).toBe("100000000");
     expect(intent.deadline).toBeGreaterThan(0);
   });
 

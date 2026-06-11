@@ -54,7 +54,7 @@ describe('getContractAddresses', () => {
   test('returns array of addresses for chain 1', () => {
     const addrs = getContractAddresses(1);
     expect(addrs.length).toBeGreaterThan(10);
-    expect(addrs).toContain('0xE592427A0AEce92De3Edee1F18E0157C05861564'.toLowerCase());
+    expect(addrs.map(a => a.toLowerCase())).toContain("0xE592427A0AEce92De3Edee1F18E0157C05861564".toLowerCase());
   });
 });
 

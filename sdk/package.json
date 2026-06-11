@@ -9,15 +9,24 @@
     "test": "jest",
     "lint": "eslint src/"
   },
-  "keywords": ["ethereum", "evm", "agent", "security", "intent", "middleware"],
+  "keywords": [
+    "ethereum",
+    "evm",
+    "agent",
+    "security",
+    "intent",
+    "middleware"
+  ],
   "license": "MIT",
   "dependencies": {
     "ethers": "^6.0.0"
   },
   "devDependencies": {
-    "typescript": "^5.0.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^20.0.0",
     "jest": "^29.0.0",
-    "@types/node": "^20.0.0"
+    "ts-jest": "^29.4.11",
+    "typescript": "^5.0.0"
   },
   "publishConfig": {
     "access": "public"
