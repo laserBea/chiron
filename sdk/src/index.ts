@@ -1,87 +1,84 @@
 /**
+import { ethers } from "ethers";
  * Chiron SDK — Agent Transaction Security Middleware
  *
- * Core verification client for intent-execution semantic consistency checking.
+ * Main entry point. Provides:
+ *   - intent() — generate structured intent templates
+ *   - verify() — L1 consistency verification
+ *   - storeReceipt() — async on-chain receipt storage
  */
 
-export interface IntentTemplate {
-  actionType: number;
-  protocolHash: string;
-  tokenIn: string;
-  tokenOut: string;
-  amount: string;
-  amountOutMin: string;
-  receiver: string;
-  deadline: number;
-  customData: string;
-}
+import { ProtocolRegistry } from './registry';
+import { IntentParser } from './intent';
+import { ConsistencyChecker } from './checker';
+import { ReceiptBuilder } from './receipt';
+import {
+  ChironConfig,
+  IntentParams,
+  IntentTemplate,
+  TxCandidate,
+  VerificationReceipt,
+} from './types';
 
-export interface DecodedTx {
-  target: string;
-  value: string;
-  selector: string;
-  functionName: string;
-  params: string[];
-}
-
-export interface VerificationReceipt {
-  allowed: boolean;
-  reason: string;
-  intentHash: string;
-  txHash: string;
-  l1Result: 'PASS' | 'FAIL' | 'UNCERTAIN';
-  l2Result?: 'CONSISTENT' | 'INCONSISTENT';
-}
-
-export interface ChironConfig {
-  chainId: number;
-  agentKey?: string;
-  securityLevel?: 'standard' | 'strict';
-}
+export * from './types';
 
 export class Chiron {
   private config: ChironConfig;
+  private registry: ProtocolRegistry;
+  private intentParser: IntentParser;
+  private checker: ConsistencyChecker;
+  private receiptBuilder: ReceiptBuilder;
 
   constructor(config: ChironConfig) {
     this.config = {
       securityLevel: 'standard',
       ...config,
     };
+    this.registry = new ProtocolRegistry(this.config.chainId, this.config.tokenResolver);
+    this.intentParser = new IntentParser(this.registry);
+    this.checker = new ConsistencyChecker(this.registry);
+    this.receiptBuilder = new ReceiptBuilder();
   }
 
   /**
    * Create a structured intent template for a DeFi action.
+   * @param action Action name (swap, approve, bridge, deposit, withdraw, stake, vote, permit, custom)
+   * @param params Action-specific parameters
    */
-  intent(action: string, params: Record<string, string>): IntentTemplate {
-    return {
-      actionType: 1,
-      protocolHash: '',
-      tokenIn: '',
-      tokenOut: '',
-      amount: '0',
-      amountOutMin: '0',
-      receiver: '',
-      deadline: Math.floor(Date.now() / 1000) + 3600,
-      customData: '',
-    };
+  async intent(action: string, params: IntentParams): Promise<IntentTemplate> {
+    return this.intentParser.create(action, params as unknown as Record<string, unknown>);
   }
 
   /**
    * Verify that a transaction is semantically consistent with the declared intent.
+   * L1 check: deterministic local verification (~10ms, 0 cost).
+   * @param intent The structured intent template
+   * @param tx The transaction to verify
    */
-  async verify(intent: IntentTemplate, tx: { to: string; data: string; value: string }): Promise<VerificationReceipt> {
-    return {
-      allowed: true,
-      reason: 'L1 PASS',
-      intentHash: '',
-      txHash: '',
-      l1Result: 'PASS',
-    };
+  async verify(intent: IntentTemplate, tx: TxCandidate): Promise<VerificationReceipt> {
+    const txHash = this.computeTxHash(tx);
+
+    const { l1Result, details, decodedTx } = this.checker.check(intent, tx);
+
+    return this.receiptBuilder.build(intent, txHash, l1Result, details, decodedTx);
   }
 
   /**
-   * Asynchronously store a verification receipt on-chain (non-blocking).
+   * Asynchronously store a verification receipt on-chain (non-blocking skeleton).
+   * Full implementation in Phase 2.
    */
-  async storeReceipt(receipt: VerificationReceipt): Promise<void> {
+  async storeReceipt(_receipt: VerificationReceipt): Promise<void> {
+    // Phase 2: on-chain storage via VerificationStore contract
+    return Promise.resolve();
+  }
+
+  /** Compute deterministic transaction hash */
+  private computeTxHash(tx: TxCandidate): string {
+    // ethers imported at top
+    const data = ethers.solidityPacking(
+      ['address', 'bytes', 'uint256'],
+      [tx.to, tx.data, tx.value || '0']
+    );
+    return ethers.keccak256(data);
   }
 }
