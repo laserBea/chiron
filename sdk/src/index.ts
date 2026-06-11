@@ -1,5 +1,4 @@
 /**
-import { ethers } from "ethers";
  * Chiron SDK — Agent Transaction Security Middleware
  *
  * Main entry point. Provides:
@@ -7,6 +6,7 @@ import { ethers } from "ethers";
  *   - verify() — L1 consistency verification
  *   - storeReceipt() — async on-chain receipt storage
  */
+import { ethers } from "ethers";
 
 import { ProtocolRegistry } from './registry';
 import { IntentParser } from './intent';
@@ -75,7 +75,7 @@ export class Chiron {
   /** Compute deterministic transaction hash */
   private computeTxHash(tx: TxCandidate): string {
     // ethers imported at top
-    const data = ethers.solidityPacking(
+    const data = ethers.solidityPacked(
       ['address', 'bytes', 'uint256'],
       [tx.to, tx.data, tx.value || '0']
     );

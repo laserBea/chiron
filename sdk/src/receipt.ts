@@ -43,7 +43,7 @@ export class ReceiptBuilder {
 
   /** Compute deterministic hash for an IntentTemplate */
   private computeIntentHash(intent: IntentTemplate): string {
-    // ethers available from import
+    const abi = ethers.AbiCoder.defaultAbiCoder();
     const encoded = abi.encode(
       ['uint8', 'bytes32', 'address', 'address', 'uint256', 'uint256', 'address', 'uint256', 'bytes32'],
       [

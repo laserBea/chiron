@@ -37,6 +37,18 @@ export const PROTOCOL_REGISTRY: ChainProtocolMap = {
         '0xdb3e2198': 'exactOutputSingle',
       },
     },
+    'cow_swap': {
+      actionType: ActionType.SWAP,
+      protocol: 'cow_swap',
+      contracts: [
+        '0x9008D19f58AABd9eD0D60971565AA8510560ab41',  // GPv2Settlement
+      ],
+      selectors: {
+        '0x2c7713b9': 'settle',
+        '0x322e0676': 'preSettle',
+        '0x2c66debc': 'setPreSignature',
+      },
+    },
     'curve': {
       actionType: ActionType.SWAP,
       protocol: 'curve',
@@ -80,6 +92,120 @@ export const PROTOCOL_REGISTRY: ChainProtocolMap = {
         '0x474cf53d': 'supplyWithPermit',
       },
     },
+    'spark': {
+      actionType: ActionType.DEPOSIT,
+      protocol: 'spark',
+      contracts: [
+        '0xC13e21B648A5Ee794902342038FF3aD4F8f2e9c7',  // SparkLend
+      ],
+      selectors: {
+        '0xe8eda9df': 'supply',
+        '0x69328dec': 'withdraw',
+        '0xa415bcad': 'borrow',
+        '0x7df5bd01': 'repay',
+        '0x474cf53d': 'supplyWithPermit',
+      },
+    },
+    'sky_maker': {
+      actionType: ActionType.DEPOSIT,
+      protocol: 'sky_maker',
+      contracts: [
+        '0x373238337Bfe1146fB499Bb9Ee5F7b7c44E50DcF',  // DSR
+        '0x83F20F44975D03b1b09e64809B757c47f942BEeA',  // sDAI
+        '0x6B175474E89094C44Da98b954EedeAC495271d0F',  // DAI
+      ],
+      selectors: {
+        '0xbc61394a': 'deposit',
+        '0x2e1a7d4d': 'withdraw',
+        '0x07522a2f': 'redeem',
+      },
+    },
+    'ethena': {
+      actionType: ActionType.STAKE,
+      protocol: 'ethena',
+      contracts: [
+        '0x9D39A5DE30e57443BfF2A8307A4256c8797A3497',  // sUSDe
+        '0x4c9EDD5852cd905f086C759E8383e09bff1E68B3',  // USDe
+      ],
+      selectors: {
+        '0x9b3ebc21': 'stake',
+        '0x2e1a7d4d': 'unstake',
+        '0xa9059cbb': 'transfer',
+      },
+    },
+    'eigenlayer': {
+      actionType: ActionType.STAKE,
+      protocol: 'eigenlayer',
+      contracts: [
+        '0x858646372CC42E1a627fcE94aa7A7033e7A075cc',  // StrategyManager
+        '0x39053D51b77DC0d36036Fc1fCc8Cb819df8Ef37A',  // DelegationManager
+      ],
+      selectors: {
+        '0x35bb3e69': 'depositIntoStrategy',
+        '0x285353c5': 'depositIntoStrategyWithSignature',
+        '0x2e1a7d4d': 'withdraw',
+        '0x0d2e2e8c': 'queueWithdrawals',
+        '0x7a8b2633': 'completeQueuedWithdrawal',
+      },
+    },
+    'ether_fi': {
+      actionType: ActionType.STAKE,
+      protocol: 'ether_fi',
+      contracts: [
+        '0x35fA164735182de50811E8e2E824cFb9B6118ac2',  // eETH
+        '0xCd5fE23C85820F7B72D0926FC9b05b43E359b7ee',  // weETH
+        '0x308861A430be4cce5712b9e94f9fBc8c6a07F6a5',  // LiquidityPool
+      ],
+      selectors: {
+        '0xa1903eab': 'deposit',
+        '0x2e1a7d4d': 'withdraw',
+        '0x9b3ebc21': 'stake',
+        '0xf305d719': 'wrap',
+        '0xea598db0': 'unwrap',
+      },
+    },
+    'pendle': {
+      actionType: ActionType.SWAP,
+      protocol: 'pendle',
+      contracts: [
+        '0x00000000005BBB0EF59571E58418F9a4357b68A0',  // PendleRouter
+        '0x1b6f2dEA9AC4A2e4bCDe8CbF5A7e8D4c8F5E8C2A',  // MarketFactory (legacy)
+      ],
+      selectors: {
+        '0x1fc2991a': 'swapExactIn',
+        '0x1c19b44e': 'swapExactOut',
+        '0x7832e9e8': 'addLiquidity',
+        '0x763b9e6d': 'removeLiquidity',
+        '0x9b3ebc21': 'mintSy',
+        '0x2e1a7d4d': 'redeemPy',
+      },
+    },
+    'yearn': {
+      actionType: ActionType.DEPOSIT,
+      protocol: 'yearn',
+      contracts: [
+        '0x0000000000E66FE7e3c8Ea3F5ae3C1C1314014F5',  // yVault generic proxy
+      ],
+      selectors: {
+        '0x6e553f65': 'deposit',
+        '0x2e1a7d4d': 'withdraw',
+        '0xb6b55f25': 'mint',
+        '0xba087652': 'redeem',
+      },
+    },
+    'convex': {
+      actionType: ActionType.DEPOSIT,
+      protocol: 'convex',
+      contracts: [
+        '0xF403C135812408BFbE8713b5A23a04b3D48AAE31',  // Booster
+      ],
+      selectors: {
+        '0xb5b5e9e6': 'deposit',
+        '0x2e1a7d4d': 'withdraw',
+        '0x7d8601f0': 'claimRewards',
+        '0x372500ab': 'stake',
+      },
+    },
     'compound_v3': {
       actionType: ActionType.DEPOSIT,
       protocol: 'compound_v3',
@@ -91,14 +217,58 @@ export const PROTOCOL_REGISTRY: ChainProtocolMap = {
         '0x8c9a0286': 'withdrawTo',
       },
     },
+    'morpho_blue': {
+      actionType: ActionType.DEPOSIT,
+      protocol: 'morpho_blue',
+      contracts: [
+        '0xBBBBBbbBBb9cC5e90e3b3Af64bdAF62C37EEFFCb',  // Morpho Blue
+      ],
+      selectors: {
+        '0xbf488d24': 'supply',
+        '0x935929c4': 'supplyCollateral',
+        '0xc4b5e0e7': 'withdraw',
+        '0x487a2f23': 'withdrawCollateral',
+        '0xf3fef3a3': 'borrow',
+        '0xba087652': 'repay',
+      },
+    },
+    'morpho_aave_v3': {
+      actionType: ActionType.DEPOSIT,
+      protocol: 'morpho_aave_v3',
+      contracts: [
+        '0x33333bAc38dA8E7e6cE23E3e2Fb33Ccc5aA8A9F',  // Morpho-Aave V3
+      ],
+      selectors: {
+        '0x47e7ef24': 'supply',
+        '0x441a3e70': 'withdraw',
+        '0xc5e368bc': 'borrow',
+        '0x0b8f6729': 'repay',
+      },
+    },
+    'rocket_pool': {
+      actionType: ActionType.STAKE,
+      protocol: 'rocket_pool',
+      contracts: [
+        '0xae78736Cd615f374D3085123A210448E74Fc6393',  // rETH
+      ],
+      selectors: {
+        '0x9b3ebc21': 'deposit',
+        '0x2e1a7d4d': 'withdraw',
+      },
+    },
     'lido': {
       actionType: ActionType.STAKE,
       protocol: 'lido',
-      contracts: ['0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84'],
+      contracts: [
+        '0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84',  // stETH
+        '0x7f39C581F595B53c5cb19bD0b3f8dE6b9351cA5D',  // wstETH
+        '0x889edC2eDab5f40e902b864aD4d7AdE8E412F9B1',  // WithdrawalQueue
+      ],
       selectors: {
         '0xa1903eab': 'submit',
         '0xc51b3547': 'wrap',
         '0xea598db0': 'unwrap',
+        '0x2e1a7d4d': 'withdraw',
       },
     },
     '1inch_v5': {
@@ -136,6 +306,30 @@ export const PROTOCOL_REGISTRY: ChainProtocolMap = {
         '0x22b6b934': 'transformERC20',
         '0xbc80f1a8': 'sellToUniswap',
         '0x6af479b2': 'multiplexSellTokenForToken',
+      },
+    },
+    'stargate': {
+      actionType: ActionType.BRIDGE,
+      protocol: 'stargate',
+      contracts: [
+        '0x8731d54E9D02c286767d56ac03e8037C07e01e98',  // Stargate Router
+      ],
+      selectors: {
+        '0x9b3ebc21': 'swap',
+        '0x2f5ab6d8': 'addLiquidity',
+        '0xbf7e2238': 'removeLiquidity',
+        '0xf19a6c3c': 'instantRedeemLocal',
+      },
+    },
+    'circle_cctp': {
+      actionType: ActionType.BRIDGE,
+      protocol: 'circle_cctp',
+      contracts: [
+        '0xBd3fa81B58Ba92a82136038B25aDec7066af3155',  // TokenMessenger
+      ],
+      selectors: {
+        '0x6fd87cea': 'depositForBurn',
+        '0x37a64b00': 'replaceDepositForBurn',
       },
     },
     'across': {
