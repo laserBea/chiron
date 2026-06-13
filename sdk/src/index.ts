@@ -82,3 +82,4 @@ export class Chiron {
     return ethers.keccak256(data);
   }
 }
+export { BatchParser, BatchVerifier } from './batch';

@@ -1,0 +1,19 @@
+name: Verify Protocol Registration
+on:
+  pull_request:
+    paths: ['sdk/src/registry-data.ts']
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: cd sdk && npm install
+      - run: cd sdk && npm test
+      - run: cd sdk && npx ts-node -e "
+          const {PROTOCOL_REGISTRY} = require('./src/registry-data');
+          Object.entries(PROTOCOL_REGISTRY).forEach(([chain, protocols]) => {
+            const names = Object.keys(protocols);
+            console.log('Chain ' + chain + ': ' + names.length + ' protocols');
+          });"
