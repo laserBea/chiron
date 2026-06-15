@@ -53,3 +53,26 @@ install:
 	cd sdk && npm install
 	cd verifier && npm install 2>/dev/null || true
 	cd webhook && npm install 2>/dev/null || true
+
+# ──────── Local Anvil ────────
+
+anvil-start:
+	@echo "Starting Anvil on :8545..."
+	@anvil &
+	@sleep 2
+	@echo "Anvil ready"
+
+deploy-local: build
+	forge script contracts/script/Deploy.s.sol \
+		--rpc-url $(ETHEREUM_RPC) \
+		--private-key $(PRIVATE_KEY) \
+		--broadcast \
+		--slow
+
+local: deploy-local
+	@echo "=== Deployment complete ==="
+	@echo "Chiron address:"
+	@cat broadcast/Deploy.s.sol/31337/run-latest.json | python3 -c "import sys,json; r=json.load(sys.stdin); t=r['transactions'][0]; print(t['contractAddress'])" 2>/dev/null || echo "Check broadcast/ directory"
+
+anvil-stop:
+	@pkill anvil 2>/dev/null; echo "Anvil stopped"
