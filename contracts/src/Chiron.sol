@@ -54,6 +54,16 @@ contract Chiron {
     // ============ Core ============
 
     /// @notice Store a verification receipt on-chain
+    function isAgentPaused(address agent) external view returns (bool) {
+        if (address(circuitBreaker) == address(0)) return false;
+        return circuitBreaker.isPaused(agent);
+    }
+
+    function setCircuitBreaker(address _cb) external {
+        require(msg.sender == owner, "Only owner");
+        circuitBreaker = ICircuitBreaker(_cb);
+    }
+
     function storeReceipt(
         bytes32 _txHash,
         bytes32 _intentHash,
@@ -61,7 +71,7 @@ contract Chiron {
         L1Result _l1Result,
         L2Result _l2Result
     ) external {
-        require(!isAgentPaused(_agent), "Agent is paused");
+        if (address(circuitBreaker) != address(0)) require(!circuitBreaker.isPaused(_agent), "Agent is paused");
         require(receipts[_txHash].timestamp == 0, "Receipt already exists");
         require(dailyNonce[_agent] < MAX_DAILY_TX, "Daily limit reached");
         if (address(circuitBreaker) != address(0)) {
@@ -95,13 +105,5 @@ contract Chiron {
         return agentReceipts[_agent];
     }
 
-    function setCircuitBreaker(address _cb) external {
-        require(msg.sender == owner, "Only owner");
-        circuitBreaker = ICircuitBreaker(_cb);
-    }
 
-    function isAgentPaused(address agent) external view returns (bool) {
-        if (address(circuitBreaker) == address(0)) return false;
-        return circuitBreaker.isPaused(agent);
-    }
 }

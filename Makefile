@@ -62,12 +62,8 @@ anvil-start:
 	@sleep 2
 	@echo "Anvil ready"
 
-deploy-local: build
-	forge script contracts/script/Deploy.s.sol \
-		--rpc-url $(ETHEREUM_RPC) \
-		--private-key $(PRIVATE_KEY) \
-		--broadcast \
-		--slow
+deploy-local:
+	cd contracts && forge script script/Deploy.s.sol 		--rpc-url http://127.0.0.1:8545 		--private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 		--broadcast 		--slow
 
 local: deploy-local
 	@echo "=== Deployment complete ==="

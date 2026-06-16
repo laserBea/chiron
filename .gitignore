@@ -10,3 +10,6 @@ cache/
 coverage/
 artifacts/
 typechain-types/
+
+# Foundry dependencies
+contracts/lib/
