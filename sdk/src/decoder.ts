@@ -87,6 +87,21 @@ export class TxDecoder {
           type: inputs[i].type,
           value: this.serializeValue(val),
         });
+        // Flatten struct fields for checker compatibility
+        if (typeof val === 'object' && val !== null && inputs[i].baseType === 'tuple') {
+          const se = inputs[i].components || [];
+          for (let j = 0; j < se.length; j++) {
+            const fn = se[j].name || 'f' + j;
+            const fv = (val[fn] !== undefined) ? val[fn] : val[j];
+            if (fv !== undefined) {
+              result.push({
+                name: fn,
+                type: se[j].type || 'unknown',
+                value: typeof fv === 'object' && fv !== null && typeof fv.toString === 'function' ? fv.toString() : this.serializeValue(fv),
+              });
+            }
+          }
+        }
       }
       return result;
     } catch {
@@ -98,9 +113,9 @@ export class TxDecoder {
   private getParamTypes(fnName: string): string[] | null {
     const signatures: Record<string, string[]> = {
       exactInput:              ['bytes', 'address', 'uint256'],
-      exactInputSingle:        ['address', 'address', 'uint24', 'address', 'uint256', 'uint256', 'uint256'],
+      exactInputSingle:        ['tuple(address tokenIn,address tokenOut,uint24 fee,address recipient,uint256 deadline,uint256 amountIn,uint256 amountOutMinimum,uint160 sqrtPriceLimitX96)'],
       exactOutput:             ['bytes', 'address', 'uint256'],
-      exactOutputSingle:       ['address', 'address', 'uint24', 'address', 'uint256', 'uint256', 'uint256'],
+      exactOutputSingle:       ['tuple(address tokenIn,address tokenOut,uint24 fee,address recipient,uint256 deadline,uint256 amountIn,uint256 amountOutMinimum,uint160 sqrtPriceLimitX96)'],
       swapExactTokensForTokens: ['uint256', 'uint256', 'address[]', 'address', 'uint256'],
       swapExactETHForTokens:    ['uint256', 'address[]', 'address', 'uint256'],
       deposit:                 ['address', 'uint256', 'address', 'uint16'],

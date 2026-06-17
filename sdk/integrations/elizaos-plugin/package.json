@@ -1,0 +1,9 @@
+{
+  "name": "plugin-chiron",
+  "version": "0.1.0",
+  "description": "Chiron — Agent Transaction Security Middleware for ElizaOS",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@chiron/sdk": "file:../.."
+  }
+}

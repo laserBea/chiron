@@ -124,57 +124,44 @@ export class ConsistencyChecker {
     const amount = BigInt(intent.amount || '0');
     if (amount === BigInt(0)) {
       return {
-        ruleId: 'R4',
-        ruleName: 'Amount check',
-        passed: true,
-        expected: 'No amount specified in intent',
-        actual: 'Amount not checked',
-        severity: 'info',
+        ruleId: 'R4', ruleName: 'Amount check', passed: true,
+        expected: 'No amount specified in intent', actual: 'Amount not checked', severity: 'info',
       };
     }
-
-    // Check decoded params for amount field
+    // Find amount-related param first, otherwise largest numeric
     let txAmount = BigInt(0);
     for (const p of decoded.params) {
-      const val = String(p.value);
-      try {
-        const bigVal = BigInt(val);
-        if (bigVal > txAmount) txAmount = bigVal;
-      } catch {
-        // Non-numeric param
+      if (!p.name.toLowerCase().includes('amount')) continue;
+      try { txAmount = BigInt(String(p.value)); break; } catch { continue; }
+    }
+    if (txAmount === BigInt(0)) {
+      for (const p of decoded.params) {
+        const val = String(p.value);
+        if (val.startsWith('0x') && val.length >= 40) continue;
+        try {
+          const bigVal = BigInt(val);
+          if (bigVal > txAmount) txAmount = bigVal;
+        } catch { continue; }
       }
     }
-
     if (txAmount === BigInt(0)) {
       return {
-        ruleId: 'R4',
-        ruleName: 'Amount check',
-        passed: true,
-        expected: `Amount: ${amount.toString()}`,
-        actual: 'Could not extract amount from tx',
-        severity: 'info',
+        ruleId: 'R4', ruleName: 'Amount check', passed: true,
+        expected: `Amount: ${amount.toString()}`, actual: 'Could not extract amount from tx', severity: 'info',
       };
     }
-
-    // Check with ±0.5% tolerance
-    const slippage = BigInt(1000); // 0.5% = 5/1000
+    const slippage = BigInt(1000);
     const minAmount = amount - (amount * slippage) / BigInt(1000);
     const maxAmount = amount + (amount * slippage) / BigInt(1000);
-
     const passed = txAmount >= minAmount && txAmount <= maxAmount;
-
     return {
-      ruleId: 'R4',
-      ruleName: 'Amount check',
-      passed,
-      expected: `Amount ≈ ${amount.toString()} (±0.5%)`,
-      actual: `Tx amount: ${txAmount.toString()}`,
+      ruleId: 'R4', ruleName: 'Amount check', passed,
+      expected: `Amount ≈ ${amount.toString()} (±0.5%)`, actual: `Tx amount: ${txAmount.toString()}`,
       severity: passed ? 'info' : 'error',
     };
   }
 
-  /** R5: Check for unexpected parameters (receiver mismatch, hidden approvals) */
-  private r5_unexpectedParams(intent: IntentTemplate, decoded: DecodedTx): CheckDetail {
+    private r5_unexpectedParams(intent: IntentTemplate, decoded: DecodedTx): CheckDetail {
     const issues: string[] = [];
 
     // Check receiver if specified in intent
