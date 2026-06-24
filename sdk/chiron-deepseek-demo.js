@@ -62,7 +62,7 @@ WETH (Ethereum): 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer sk-01fe355a238c453ca2925a95fbcf6aea`,
+      'Authorization': `Bearer ${process.env.DEEPSEEK_KEY || ''}`,
     },
     body: JSON.stringify({
       model: 'deepseek-chat',

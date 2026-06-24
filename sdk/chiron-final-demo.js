@@ -14,7 +14,7 @@ const RPC = 'https://eth-sepolia.g.alchemy.com/v2/KXlZPX9vcGjW2xfxs1ZuM';
 const PK = '0x8dc3fd76b7b44e1557f7da0e62939e7bf8e880e6170758d4a09d05a9a6502cfe';
 const CHIRON_ADDR = '0xD21BCB2868e44e7644B52E21838Eb7c1431EA838';
 const DEPLOYER_ADDR = '0x0547BAaA9F682a26E9129B15Fbf1a9Ed51f87e1B';
-const DEEPSEEK_KEY = 'sk-01fe355a238c453ca2925a95fbcf6aea';
+const DEEPSEEK_KEY = process.env.DEEPSEEK_KEY || '';
 
 const provider = new ethers.JsonRpcProvider(RPC);
 const signer = new ethers.Wallet(PK, provider);
